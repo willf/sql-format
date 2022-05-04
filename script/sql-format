@@ -1,0 +1,107 @@
+#!env python
+
+import argparse
+import sqlparse
+import sys
+
+parser = argparse.ArgumentParser(description="Format SQL files")
+parser.add_argument(
+    "-f", "--file", default="-", help="SQL file to format. Default: stdin"
+)
+
+parser.add_argument(
+    "-kc",
+    "--keyword_case",
+    default="upper",
+    help="Changes how keywords are formatted. Allowed values are “upper”, “lower” and “capitalize”. Default is “upper”.",
+)
+parser.add_argument(
+    "-ic",
+    "--identifier_case",
+    default="lower",
+    help="Changes how identifiers are formatted. Allowed values are “upper”, “lower”, and “capitalize”. Default is “lower”.",
+)
+
+parser.add_argument(
+    "-sc",
+    "--strip_comments",
+    default=False,
+    type=bool,
+    help="If True comments are removed from the statements. Default is False.",
+)
+
+parser.add_argument(
+    "-ri",
+    "--reindent",
+    default=True,
+    type=bool,
+    help="If True the indentations of the statements are changed. Default is True.",
+)
+parser.add_argument(
+    "-ra",
+    "--reindent_aligned",
+    default=False,
+    type=bool,
+    help="If True the indentations of the statements are changed, and statements are aligned by keywords. Default is False.",
+)
+parser.add_argument(
+    "-us",
+    "--use_space_around_operators",
+    default=False,
+    type=bool,
+    help="If True spaces are used around all operators. Default is False.",
+)
+parser.add_argument(
+    "-it",
+    "--indent_tabs",
+    default=False,
+    type=bool,
+    help="If True tabs instead of spaces are used for indentation. Default is False.",
+)
+parser.add_argument(
+    "-iw",
+    "--indent_width",
+    default=2,
+    type=int,
+    help="The width of the indentation. Default is 2.",
+)
+parser.add_argument(
+    "-wa",
+    "--wrap_after",
+    default=False,
+    type=bool,
+    help="The column limit (in characters) for wrapping comma-separated lists. If unspecified, it puts every item in the list on its own line. Default is False.",
+)
+parser.add_argument(
+    "-of",
+    "--output_format",
+    default="sql",
+    help="If given the output is additionally formatted to be used as a variable in a programming language. Allowed values are “sql”, “python” and “php”. Default is “sql”.",
+)
+parser.add_argument(
+    "-cf",
+    "--comma_first",
+    default=False,
+    type=bool,
+    help="If True comma-first notation for column names is used. Default is False.",
+)
+args = parser.parse_args()
+
+with open(args.file, "r") if args.file != "-" else sys.stdin as f:
+    incoming = "\n".join(f.readlines())
+    print(
+        sqlparse.format(
+            incoming,
+            keyword_case=args.keyword_case,
+            identifier_case=args.identifier_case,
+            strip_comments=args.strip_comments,
+            reindent=args.reindent,
+            reindent_aligned=args.reindent_aligned,
+            use_space_around_operators=args.use_space_around_operators,
+            indent_tabs=args.indent_tabs,
+            indent_width=args.indent_width,
+            wrap_after=args.wrap_after,
+            output_format=args.output_format,
+            comma_first=args.comma_first,
+        )
+    )
