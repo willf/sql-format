@@ -68,8 +68,8 @@ parser.add_argument(
 parser.add_argument(
     "-wa",
     "--wrap_after",
-    default=False,
-    type=bool,
+    default=0,
+    type=int,
     help="The column limit (in characters) for wrapping comma-separated lists. If unspecified, it puts every item in the list on its own line. Default is False.",
 )
 parser.add_argument(
